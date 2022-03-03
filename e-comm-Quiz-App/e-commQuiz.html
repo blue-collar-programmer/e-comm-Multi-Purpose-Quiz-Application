@@ -9,15 +9,24 @@
 <style defer type="text/javascript" src="quiz-app.js"></style>    
 </head>
 <body>
- <div class="container" id="container">
     <h1 class="quizName" id="eCommerceQuiz">
         e-Commerce Quiz
     </h1>
-    <h3 class="questionCount" id="questionCount">
-        Question 1 of 3
-    </h3>
-    <div class="question-container">
-        <h3>
+ <div class= "active container" id="container">
+     <div class="active startQuizContainer" id="startQuiz">
+        <h3 class="startAnouncement">
+            Press The Start To Take The Quiz
+        </h3>
+        <button class="btn" id="startBtn">
+            Start
+        </button>
+     </div>
+     <div id="seperationContainer" class="hide">
+    <div id="questionContainer" class=" question-container">
+        <h3 class="questionCount" id="questionCount">
+            Question 1 of 3
+        </h3>
+        <h3 id="questionAsked">
         First Question
         </h3>
     <label for="opt-1" class= 'options'>
@@ -25,7 +34,7 @@
         opt-1
     </label>
     <label for="opt-2" class= 'options'>
-        <input type="radio" id="opt-2" name="question-1">
+        <input type="radio" id="opt-2" name="question-1" class="correct">
         opt-2
     </label>
     <label for="opt-3" class= 'options'>
@@ -36,9 +45,11 @@
         <input type="radio" id="opt-4" name="question-1">
         opt-4
     </label>
+    <button class= "btn" id="Next">Next</button>
 </div>
-    <button class= "next-btn" id="Next">Next</button>
 </div>
+</div>
+<script src="e-CommQuiz.js"></script>
 </body>
 </html>    
              
