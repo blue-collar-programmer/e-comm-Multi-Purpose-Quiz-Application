@@ -14,14 +14,14 @@
     </h1>
  <div class= "active container" id="container">
      <div class="active startQuizContainer" id="startQuiz">
-        <h3 class="startAnouncement">
+        <h3 class="anouncement">
             Press The Start To Take The Quiz
         </h3>
         <button class="btn" id="startBtn">
             Start
         </button>
      </div>
-     <div id="seperationContainer" class="hide">
+     <div id="transitionContainer" class="hide">
     <div id="questionContainer" class=" question-container">
         <h3 class="questionCount" id="questionCount">
             Question 1 of 3
@@ -29,24 +29,33 @@
         <h3 id="questionAsked">
         First Question
         </h3>
-    <label for="opt-1" class= 'options'>
-        <input type="radio"  id="opt-1" name="question-1">
-        opt-1
+        <label for="opt0" class= 'options'>
+            <input type="radio"  id="opt0" value= 'a0' name="answer">
+            <span id="a0" class="answerText">opt-1</span>
+        </label>
+    <label for="opt1" class= 'options'>
+        <input type="radio" id="opt1" name="answer" value="a1">
+        <span id="a1" class="answerText">opt-2</span>
     </label>
-    <label for="opt-2" class= 'options'>
-        <input type="radio" id="opt-2" name="question-1" class="correct">
-        opt-2
+    <label for="opt2" class= 'options'>
+        <input type="radio" id="opt2" name="answer" value="a2">
+        <span id="a2" class="answerText">opt-3</span>
     </label>
-    <label for="opt-3" class= 'options'>
-        <input type="radio" id="opt-3" name="question-1">
-        opt-3
-    </label>
-    <label for="opt-4" class= 'options'>
-        <input type="radio" id="opt-4" name="question-1">
-        opt-4
+    <label for="opt3" class= 'options'>
+        <input type="radio" id="opt3" name="answer" value="a3">
+        <span id="a3" class="answerText">opt-3</span>
     </label>
     <button class= "btn" id="Next">Next</button>
 </div>
+</div>
+<div id="resultsPage" class="hide resultsPage " >
+    <h3 class="anouncement resultsAnouncement">
+        You Finshed the Quiz
+    </h3>
+    <p>Your Score</p>
+    <button class="btn" id="retestBtn">
+        Retest
+    </button>
 </div>
 </div>
 <script src="e-CommQuiz.js"></script>
