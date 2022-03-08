@@ -18,9 +18,8 @@ const questions = [{
         question: 'Which of the following is true about Shopify developers?',
         Answers: ['They are paid extremely well',
             'There is a high demand for them',
-            'They need to know web development',
-            'the platform itself, and the liquid template language',
-            'All the above [correct]'
+            'They need to know web development,the platform itself, and the liquid template language',
+            'All the above '
         ],
         correct: 'All the above'
     }
@@ -46,11 +45,13 @@ Use another function to determine whether a question has already been asked how?
 
 
 
+
 var quizState = {
+    qCount: 2,
     questionCount: 1,
     quizLength: 3,
-    wrongCount: 0,
-    rightCount: 0
+    rightCount: 0,
+    wrongCount: 0
 }
 
 var quizContents = {
@@ -139,90 +140,96 @@ This function loops through the input ele
 4. get it how? by passing the current radio.value-- the stored value in this 'value' property is an exact match to the adjacent span id value 
 5. next store that value into a variable, and call the testSelectedAnswer() and pass it the selectedAnswer variable
 6. lastly load the next set of answers and question 
-        */
-var getSelectedAnswer = function( qArray, anArray, cArray, count){
-var radios = document.getElementsByTagName('input');
-var selectedAnswer;
-for(var i = 0; i < radios.length; i++){
-    if(radios[i].type = 'radio'){
-        if(!radios[i].checked){// console.log returning the radio value is true
-            console.log('no checked radio value');
-        } else {
-            selectedAnswer = document.getElementById(radios[i].value).innerHTML;
-            console.log('Radio value: ',radios[i].value, 'Span value is: ', selectedAnswer );
-            testSelectedAnswer(selectedAnswer.innerHTML, cArray);
-            retrieveQuizQnA(qArray,anArray, count); 
-            radios[i].checked = false;
+*/
+function getSelectedAnswer(){
+    //console.log('The cArray called in the getSelectedAnswer function =>: ', cArray );
+    var radios = document.getElementsByTagName('input');
+    var selectedAnswer;
+    for(var i = 0; i < radios.length; i++){
+        if(radios[i].type = 'radio'){
+            if(radios[i].checked){// console.log returning the radio value is true
+                selectedAnswer = document.getElementById(radios[i].value).innerHTML;
+                radios[i].checked = false;
+            } 
             //getNextQ(anArray, count);// still need to reset questionCount once it hits 3 or do something
+        }
     }
-}
-}
-return true;
+     
+    return  selectedAnswer ;
 }
 
 /* testSelectedAnswer function:
 ****This function will called before the getNextAnswers() in the getSelectedAnswer() function which--
 What it does?
- 1.A function that is passed as an argument (selectedAnswer) calculated in the getSelectedAnswer() -the value of the checked radio button
+1.A function that is passed as an argument (selectedAnswer) calculated in the getSelectedAnswer() -the value of the checked radio button
 2. loops through the the correctanswerArray and, 
 3. tests the value of that checked radio box with the correct[i](the corresponding correct answer) in the correctAnswer array
 4. lastly, if answer is correct we increment ex.correct++ else we increment wrong++
 5. why? we will use it in displaying the finalResults       
 */
-
-var testSelectedAnswer =  function(userAnswer, cArray){
-    wrong = quizState.wrongCount;
-    correct = quizState.wrongCount;
-    console.log(cArray);//BUG TO FIX-SAYS CaRRAY NOT ITERABLE
-    //correctAnswers Array IS ONLY SHOWING UP IN THE QUIZCONTNENTS OBJ METHOD, BUT NO WHERE ELSE, IT SHOWS UP EMPTY
-    /*for(var c of cArray ){
-        console.log('CORRECT ANSWER LOOP: ', a);
-        if(userAnswer === c){
-            correct++
-        }else{
-            wrong++
-        }
-    }*/
+function testSelectedAnswer(userAnswer, cArray){
+console.log('USERANSWER TEST', userAnswer);
+console.log('cArray includes test:', cArray.includes(userAnswer))
+    if(cArray.indexOf(userAnswer) <= 0 || cArray.includes(userAnswer)){
+        quizState.rightCount++; // what will happen if I put this function in the loop above
+    }else{ 
+        quizState.wrongCount++;
+    }
+    console.log('WRONG COUNT: ', quizState.wrongCount, 'RIGHT COUNTS: ', quizState.rightCount);
 }
-var ans = document.getElementById('a0').innerHTML;
-console.log(testSelectedAnswer(ans), 'This is the get correct answer TEST FUNCTION')
+
 
 var getNextQ = function (qArray, count) {
     var questionAsked = document.getElementById('questionAsked');
     var currentQ = questionAsked.innerHTML
     if (currentQ === qArray[0]) {
         questionAsked.innerHTML = qArray[count];
-    } else if(count >= 2){
-        count = 1;        
-        // add switchClassesFunction here
+    } else {
+        questionAsked.innerHTML = qArray[count];
     }
 }
 // getNextAns- gets every answer array after the first, and populates each span-- 
 //idea: use the count as a way to test if first question etc.
 var getNextAns = function(anArray, count){
     var allSpans = document.querySelectorAll('span');
+    //WRITE A CONDITIONAL UP HERE THAT RESETS IF NO MORE QUESTIONS ARE AVAILA
+    /*if(count === 3){
+        return true;
+    };*/
     for(var i = 0; i < allSpans.length; i++){
         var firstAnswers = allSpans[i].innerHTML = anArray[0][i];
-// I am using the variable count value to test for and set the next array of questions why?
-    // this way if I added more questions to the test I would only have to change the quizState.questionCount in the quizState obj.        
-    var nextAnswers = allSpans[i].innerHTML = anArray[count][i];
-    if(nextAnswers === firstAnswers){
-        allSpans[i].innerHTML = anArray[count][i];
+        var nextAnswers = allSpans[i].innerHTML = anArray[count][i];
+        if(nextAnswers === firstAnswers){
+            allSpans[i].innerHTML = anArray[count][i];
         } else {
-        allSpans[i].innerHTML = anArray[count][i];
+            allSpans[i].innerHTML = anArray[count][i];
         }
     }
+;
 }
 
 var retrieveQuizQnA = function(qArray,anArray, count){
-    getNextQ(qArray, count);
-    getNextAns(anArray, count);
-    return true;
+    if(count === 3){
+        showResultsPage();
+        count = 1;
+    } else {
+        getNextQ(qArray, count);
+        getNextAns(anArray, count);
+    }
+};
+
+var showResultsPage = function(){
+    var questionContainer = document.getElementById('transitionContainer'); 
+    questionContainer.classList.replace('active', 'hide');
+    var resultsPage = document.getElementById('resultsPage');
+    resultsPage.classList.replace('hide', 'active');
+    //if(quizState.wrongCount >){
+
+  //  }
 }
+ 
 
-window.onload = init;
-
-function init() {
+window.onload = function() {
     //This meth populates the quizContents.correctAnswers prop to be used in the rest of the code 
     quizContents.getCorrectAnswer(questions);
     console.log(quizContents.correctAnswers, '<= THE correct answer meth results')
@@ -238,19 +245,29 @@ function init() {
         swapActiveClass();
         getFirstQ(quizContents.qArray);
         getFirstAn(quizContents.answerArray); 
-    })
 
+    })
+    
     var Next = document.getElementById('Next');
     Next.addEventListener('click', () => {
+        //count is a reference to quizState.questionCount, default = 1 and its purpose it to track where we are in the test
         var count = quizState.questionCount++;
-        getSelectedAnswer(quizContents.qArray ,quizContents.answerArray, quizContents.correctAnswers, count);
-        console.log('Next btn CALLED');
-        console.log('test-3 Question Cnt: ', quizState.questionCount);
+        // qCount keeps track of the present question that the user is on and displays it, it's default = 2, because 1 is hardcoded in html
+        var qCount = quizState.qCount++;
+        // this accesses the html tag that displays the current question count to the user and displays the qCount
+        document.getElementById('questionCount').innerHTML = 'Question ' + qCount + '  of 3';
+        // this is the function that gets the current selected radio input and the value of the span
+        var selectedAnswer = getSelectedAnswer();
+        // this test the user answer with the correctArray by looping through it using .includes method
+        testSelectedAnswer(selectedAnswer, quizContents.correctAnswers, count);
+        // this retrieves the next set of questions and answers
+        retrieveQuizQnA(quizContents.qArray ,quizContents.answerArray, count);
+        console.log('MAIN TEST!!!! rightCount: ', quizState.rightCount);
+        console.log('MAIN TEST!!!! wrongCount: ', quizState.wrongCount);
+
         //checkAnswer();
-        console.log('QUIZ RIGHT COUNT IS: ', quizState.rightCount, 'QUIZ WRONG COUNT IS: ', quizState.wrongCount );
-
     })
-
+//Last addEventListener to retest button
 }
 //STEPS TO MAKE GETAN FUNCTION WORKING:
     //CONSIDER: the current quizContents.answerArray consist of 3 arrays in a main array with 4 elements in each
@@ -278,7 +295,7 @@ LEFT OFF: 3/3/22-- FINISHED THE GET FIRST ANSWERS FUNCTION
                     1. switches the active class to display:none
                     2. switches the endOfQuiz class from- display:none to block
                     3. on this page user score is inserted in to the html and displayed
-                        ex.  
+                    ex.  
                 }  
                 s2.      
           2. CREATE A FUCNTION THAT COMPARES THE SELECTED ANSWER WITH THE CORRECT ANSWER
