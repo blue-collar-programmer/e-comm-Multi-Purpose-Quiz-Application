@@ -1,4 +1,6 @@
-const questions = [{
+const questions = [
+    
+    {
         question: 'Which of the following is not a real eCommerce platform?',
         Answers: ['Shopify', 'WooCommerce', 'ShopCommerce', 'BigCommerce'],
         correct: 'ShopCommerce'
@@ -13,38 +15,18 @@ const questions = [{
         ],
         correct: 'All the above'
     },
-
+    
     {
         question: 'Which of the following is true about Shopify developers?',
         Answers: ['They are paid extremely well',
             'There is a high demand for them',
             'They need to know web development,the platform itself, and the liquid template language',
-            'All the above '
+            'All the above'
         ],
         correct: 'All the above'
     }
+
 ]
-
-
-
-
-/* one function to handle converting the questions array of obj into  
-1.an array of just the questions being asked
-2.an array of the options for each question - note this will be an array within an array
-which means, a. loop the 'questions array, b. access the options prop (dot note) 
-c. loop each ele in options to push into new array
-3. lastly i need an array of the right option, and A WAY TO TEST IT WITH THE ANSWER THAT THE USER SELECTS
-
-solutions:  3- I can store the correct answers in a, 'Quiz State obj'
-store wrong answers in the 'Quiz State obj' using a property to track the count also
-1&2- I can also store the qArray, and the options in a different obj quizArrays 
-
-Use another function to determine whether a question has already been asked how?
-
-*/
-
-
-
 
 var quizState = {
     qCount: 2,
@@ -55,10 +37,20 @@ var quizState = {
 }
 
 var quizContents = {
-
+// qArray stands for question array, and will hold each question in the object array questions -- is populated by quizContents.getQuestions() meth
     qArray: [],
+// answerArray holds the array of answers in each question object, and is populated by the quizContents.getAnswers() meth     
     answerArray: [],
+// like the above correctAnswers is an array of correct prop in questions array object populated w/ quizContents.getCorrectAnswers()   
     correctAnswers: [],
+/* About these arrays?
+        The above arrays are accessed via javaScript and used to populate the web page various dynamic elements of the webpage/ quizApp
+    This is done through manipulating the DOM, and event handlers.
+    Also these arrays are used for:
+    - conditional test such as comparing the users answers with the correct answers stored
+    - comparing the current textContent of each element in order to swap or make changes etc. 
+
+*/
 
     /* ABOUT THE quizContent METHODS!!
             -All of the methods in this object does 1 thing only
@@ -100,16 +92,6 @@ var quizContents = {
 
 
 //--------------------------------------------  end of object
-function swapActiveClass() {
-    //Getting both containers id to manipulate with DOM api  
-    var startQuiz = document.getElementById('startQuiz');
-    var questionContainer = document.getElementById('transitionContainer');
-
-    //Here I am calling the .replace() method for both containers, to switch the classes they are in
-    startQuiz.classList.replace('active', 'hide');
-    // the hide class has- display: none; -and the- active- display: block;
-    questionContainer.classList.replace('hide', 'active');
-}
 
 /*getFirstQ: This function is called in the start event-- 
 its job is to add the first question into the html from the quizContents.qArray prop using the DOM API 
@@ -167,16 +149,30 @@ What it does?
 4. lastly, if answer is correct we increment ex.correct++ else we increment wrong++
 5. why? we will use it in displaying the finalResults       
 */
+
+//var TestResultsArray = new Array(2);
+
 function testSelectedAnswer(userAnswer, cArray){
-console.log('USERANSWER TEST', userAnswer);
-console.log('cArray includes test:', cArray.includes(userAnswer))
-    if(cArray.indexOf(userAnswer) <= 0 || cArray.includes(userAnswer)){
-        quizState.rightCount++; // what will happen if I put this function in the loop above
-    }else{ 
-        quizState.wrongCount++;
+    var wrong;
+    var right;
+    console.log('USERANSWER TEST', userAnswer);
+    console.log('cArray includes test:', cArray.includes(userAnswer))
+    var index = cArray.indexOf(userAnswer);
+    if( index >= 0 || cArray.includes(userAnswer)){
+        right = quizState.rightCount++; // what will happen if I put this function in the loop above
+        console.log('RIGHT!!!!',index, '<= indexof USERANSWER TEST and useranswer =>',    userAnswer,     'correct answer array', cArray)
+        
+        //TestResultsArray[0] = right; 
+    } else {    
+         console.log(cArray.indexOf(userAnswer), '<= indexof USERANSWER TEST and useranswer =>', userAnswer)
+         wrong = quizState.wrongCount++;
+         index++
+        //TestResultsArray[1] = wrong;
     }
-    console.log('WRONG COUNT: ', quizState.wrongCount, 'RIGHT COUNTS: ', quizState.rightCount);
-}
+    console.log('WRONG COUNT: ', quizState.wrongCount, 'RIGHT COUNTS: ', quizState.rightCount, 'correct answer array', cArray);
+    }
+
+
 
 
 var getNextQ = function (qArray, count) {
@@ -205,20 +201,59 @@ var getNextAns = function(anArray, count){
             allSpans[i].innerHTML = anArray[count][i];
         }
     }
-;
+    ;
 }
 
-var retrieveQuizQnA = function(qArray,anArray, count){
-    if(count === 3){
-        showResultsPage();
+var compareResults = ()=>{// trying to get score
+   var right = quizState.rightCount;
+   var wrong = quizState.wrongCount;
+ if(right > wrong){
+    // passed  
+    return results = true;
+} else {
+    //failed
+    return results = false;  
+ }
+ return false;
+};
+
+
+function retrieveQuizQnA(qArray,anArray, count){
+    var right = quizState.rightCount;
+    var wrong = quizState.wrongCount;
+    var fScore = document.getElementById('fScore'); 
+    var pScore = document.getElementById('pScore');    
+    if(count === 3 && compareResults() === true){
+        swapActiveClass('transitionContainer', 'passedPage')
+        pScore.innerHTML = `Your final score ${right} of ${quizState.quizLength} correct`;
+        count = 1;
+    } else if(count === 3 && compareResults() === false){
+        swapActiveClass('transitionContainer', 'failedPage');
+        fScore.innerHTML = `Your final score ${right} of ${quizState.quizLength} correct`;
         count = 1;
     } else {
         getNextQ(qArray, count);
         getNextAns(anArray, count);
     }
 };
+/*  The arguments in this function must be the exact id of the elements you want to remove and add active class to 
+    i.e. the argument passed into the function will be represented by the params in the getElement by id, and the variable  name 
+    acting as a reference
 
-var showResultsPage = function(){
+*///what if I passed a function into here 
+function swapActiveClass(deActivate_E_Id, reActivate_E_Id) {
+    //Getting both containers id to manipulate with DOM api  
+    deActivate_E_Id = document.getElementById(deActivate_E_Id);
+    reActivate_E_Id = document.getElementById(reActivate_E_Id);
+console.log("reActivate_E_Id test",  reActivate_E_Id )
+console.log("deActivate_E_Id test", deActivate_E_Id )
+    //Here I am calling the .replace() method for both containers, to switch the classes they are in
+    deActivate_E_Id.classList.replace('active', 'hide');
+    // the hide class has- display: none; -and the- active- display: block;
+    reActivate_E_Id.classList.replace('hide', 'active');
+}
+
+/*var showResultsPage = function(){
     var questionContainer = document.getElementById('transitionContainer'); 
     questionContainer.classList.replace('active', 'hide');
     var resultsPage = document.getElementById('resultsPage');
@@ -226,7 +261,7 @@ var showResultsPage = function(){
     //if(quizState.wrongCount >){
 
   //  }
-}
+}*/
  
 
 window.onload = function() {
@@ -241,8 +276,11 @@ window.onload = function() {
     var start = document.getElementById('startBtn');
     // This adds an eventListener to the start variable
     start.addEventListener('click', () => {
+   //     var startQuiz = domMethods.getStartQuiz('startQuiz');
+   //     var transitionContainer = domMethods.getTransitionContainer('transitionContainer');
         console.log('fired');
-        swapActiveClass();
+        swapActiveClass('startQuiz', 'transitionContainer');
+        //swapActiveClass(startQuiz, transitionContainer);
         getFirstQ(quizContents.qArray);
         getFirstAn(quizContents.answerArray); 
 
@@ -264,57 +302,26 @@ window.onload = function() {
         retrieveQuizQnA(quizContents.qArray ,quizContents.answerArray, count);
         console.log('MAIN TEST!!!! rightCount: ', quizState.rightCount);
         console.log('MAIN TEST!!!! wrongCount: ', quizState.wrongCount);
+        //console.log('TestResultsArray TEST: ', TestResultsArray);
 
         //checkAnswer();
     })
+
+    var reTest = document.getElementById('retestBtn');
+    reTest.addEventListener('click', () => {
+        document.location.reload()
+        // add code here to redirect to the quiz start
+    })
+
+    var tryAgain = document.getElementById('tryAgainBtn');
+    tryAgain.addEventListener('click', () => {
+        document.location.reload()
+
+    })
 //Last addEventListener to retest button
 }
-//STEPS TO MAKE GETAN FUNCTION WORKING:
-    //CONSIDER: the current quizContents.answerArray consist of 3 arrays in a main array with 4 elements in each
-        /* How to identify the current anArray that: 
-        1. I want to loop through -- i could use the question/count property
-        2. and assign each element [i] in the current iteration to a <label>
-        3. next determine whether I will use the id of each <label> or just a queryselectorAll()
-        4. how can I use oppertunities to practice async programming, and firstclass functions
-          */
+/* How can I compare the test scores to determine whether a person failed or passed?
+    - a f
+*/ 
 // ONCE ALL 3 QUESTIONS ARE ANSWERED AND THE NEX BTN IS HIT, A RESULTS PAGE NEEDS TO POP UP REVEALING THE TEST SCORES, AND A BTN TO TRY AGAIN AND RESET THE QUIZ
 
-
-
-
-
-/*
-LEFT OFF: 3/3/22-- FINISHED THE GET FIRST ANSWERS FUNCTION
-    NEXT: 1. BUILD THE GET NEXT ANSWERS FUNCTION
-                s1. copy as much from the first getAnswer func as possible
-                s2. we will figure this out when we get here--DONE
-          CREATE A ENDOFTESTFUNC TO DETERMINE WHEN:
-                s1. all test q's have been asked - 
-                if(quizState.quizlength === count){
-                    call function that:
-                    1. switches the active class to display:none
-                    2. switches the endOfQuiz class from- display:none to block
-                    3. on this page user score is inserted in to the html and displayed
-                    ex.  
-                }  
-                s2.      
-          2. CREATE A FUCNTION THAT COMPARES THE SELECTED ANSWER WITH THE CORRECT ANSWER
-          3. CALCULATES THE RIGHT OR THE WRONG ANSWERS
-          4. CREATE A FUCNTION THAT YOU PASS THE RIGHT OR WRONG INFO TO AND DISPLAYS IT
-          5. CREATE THE LAST PAGE, RESULTS PAGE       
-
-
-function trackAnswer(){
-    var options = document.querySelectorAll('input');
-     
-    for(var o of options){
-        if(o.className === 'correct'){
-            quizState.rightCount++
-            console.log(quizState.rightCount);
-        } else {
-            quizState.wrongCount++
-        }
-    }
-}
-
-*/

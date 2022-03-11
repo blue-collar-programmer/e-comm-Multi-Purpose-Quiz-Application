@@ -30,16 +30,16 @@
         First Question
         </h3>
         <label for="opt0" class= 'options'>
-            <input type="radio"  id="opt0" value= 'a0' name="answer">
-            <span id="a0" class="answerText">opt-1</span>
+            <input type="radio"  id="opt0" name="answer" value= "a0">
+            <span id="a0" class="answerText">opt-0</span>
         </label>
     <label for="opt1" class= 'options'>
         <input type="radio" id="opt1" name="answer" value="a1">
-        <span id="a1" class="answerText">opt-2</span>
+        <span id="a1" class="answerText">opt-1</span>
     </label>
     <label for="opt2" class= 'options'>
         <input type="radio" id="opt2" name="answer" value="a2">
-        <span id="a2" class="answerText">opt-3</span>
+        <span id="a2" class="answerText">opt-2</span>
     </label>
     <label for="opt3" class= 'options'>
         <input type="radio" id="opt3" name="answer" value="a3">
@@ -48,12 +48,21 @@
     <button class= "btn" id="Next">Next</button>
 </div>
 </div>
-<div id="resultsPage" class="hide resultsPage " >
+<div id="passedPage" class="hide passed" >
     <h3 class="anouncement resultsAnouncement">
         You Finshed the Quiz
     </h3>
-    <p>Your Score</p>
-    <button class="btn" id="retestBtn">
+    <p id="pScore">Your Score</p>
+    <button class="passedBtn" id="retestBtn">
+        Retest
+    </button>
+</div>
+<div id="failedPage" class="hide failed" >
+    <h3 class="anouncement resultsAnouncement">
+        You Finshed the Quiz
+    </h3>
+    <p id="fScore">Your Score</p>
+    <button class="failedBtn" id="tryAgainBtn">
         Retest
     </button>
 </div>

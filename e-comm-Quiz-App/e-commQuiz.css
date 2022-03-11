@@ -111,8 +111,20 @@ body {
  }
 
  .passedBtn {
+    margin-top:10px;
+    padding: 10px 25px 10px 25px;
+    border: cornflowerblue ;
+    color: white;
+    border-radius: 4px;
+    font-weight: bold; 
     font-size: 1.2em;
     background-color: slateblue;
+ }
+
+ .passedBtn:hover {
+    box-shadow: 2px 2px 3px black;
+    cursor: pointer;
+    border: #dadada solid 1px;
  }
 
 .failed {
@@ -127,7 +139,19 @@ body {
     font-size: 1.3em;
 }
 
- .failedBtn {
+.failedBtn {
     font-size: 1.2em;
     background-color: rgb(73, 153, 49);
+    margin-top:10px;
+    padding: 10px 25px 10px 25px;
+    border: cornflowerblue ;
+    color: white;
+    border-radius: 4px;
+    font-weight: bold;
+ }
+
+ .failedBtn:hover {
+    box-shadow: 2px 2px 3px black;
+    cursor: pointer;
+    border: #dadada solid 1px;
  }
